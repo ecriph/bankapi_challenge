@@ -119,7 +119,7 @@ export const Transfer = async (req, res, next) => {
       description,
     } = req.body;
 
-    const { status } = updateBalance(accountNumber, amount);
+    const { status, message } = await updateBalance(accountNumber, amount);
     if (status) {
       await Transfers.create({
         accountNumber,
@@ -141,7 +141,7 @@ export const Transfer = async (req, res, next) => {
           next(error);
         });
     } else {
-      const error = new HttpError('Transaction failed, try again', 403);
+      const error = new HttpError(message, 403);
       next(error);
     }
   } else {
